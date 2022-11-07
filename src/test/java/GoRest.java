@@ -1,5 +1,6 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import data.factory.CreatePostDataFactory;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -7,10 +8,7 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import model.Post.Request.PostRequest;
 import model.Post.Response.PostResponse;
-import model.User.Request.Builder.Build;
-import model.User.Request.Builder.BuildNewUserFemale;
-import model.User.Request.Builder.BuildNewUserMale;
-import model.User.Request.Builder.UserRequestBuilder;
+import model.User.Request.Builder.*;
 import model.User.Request.UserRequest;
 import model.User.Response.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +24,7 @@ public class GoRest {
     ObjectMapper objectMapper = new ObjectMapper();
     Build buildUserRequest = new Build();
     UserRequestBuilder userMale= new BuildNewUserMale();
+    UserRequestBuilder userMaleFake= new BuildNewUserFake();
     UserRequestBuilder userFemale= new BuildNewUserFemale();
     UserResponse responseBodyUser;
     PostResponse responseBodyPost;
@@ -79,6 +78,26 @@ public class GoRest {
 
     }
 
+    @Test
+    public void createUsermaleFake() throws JsonProcessingException {
+        buildUserRequest.setUserRequestBuilder(userMaleFake);
+        buildUserRequest.buildUserRequest();
+        UserRequest userRequest = buildUserRequest.getUserRequest();
+        String response=
+                given()
+                        .body(userRequest)
+                        .header("Authorization",
+                                "Bearer " + bearerToken)
+                        .when()
+                        .post("users")
+                        .then()
+                        .statusCode(201)
+                        .extract().asString();
+
+        responseBodyUser = objectMapper.readValue(response, UserResponse.class);
+        assertThat(responseBodyUser.getEmail(),equalTo(responseBodyUser.getEmail()));
+
+    }
 
     @Test
     public void createPostHistory() throws JsonProcessingException {
@@ -112,6 +131,45 @@ public class GoRest {
                         .post("users/"+ idUser+"/posts")
                         .then()
                         .statusCode(201)
+                        .extract().asString();
+
+        responseBodyPost = objectMapper.readValue(response, PostResponse.class);
+        assertThat(responseBodyPost.getUserId(),equalTo(responseBodyUser.getId()));
+
+    }
+
+    @Test
+    public void createPostFitcionFakeMissingAllInformation() throws JsonProcessingException {
+        PostRequest postRequest = CreatePostDataFactory.missingAllinformation();
+        Integer idUser=5943;
+        String response=
+                given()
+                        .body(postRequest)
+                        .header("Authorization",
+                                "Bearer " + bearerToken)
+                        .when()
+                        .post("users/"+ idUser+"/posts")
+                        .then()
+                        .statusCode(422)
+                        .extract().asString();
+
+        responseBodyPost = objectMapper.readValue(response, PostResponse.class);
+        assertThat(responseBodyPost.getUserId(),equalTo(responseBodyUser.getId()));
+
+    }
+    @Test
+    public void createPostFitcionFakeNews() throws JsonProcessingException {
+        PostRequest postRequest = CreatePostDataFactory.news();
+        Integer idUser=5943;
+        String response=
+                given()
+                        .body(postRequest)
+                        .header("Authorization",
+                                "Bearer " + bearerToken)
+                        .when()
+                        .post("users/"+ idUser+"/posts")
+                        .then()
+                        .statusCode(422)
                         .extract().asString();
 
         responseBodyPost = objectMapper.readValue(response, PostResponse.class);
