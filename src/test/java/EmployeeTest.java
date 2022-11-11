@@ -72,7 +72,7 @@ public class EmployeeTest {
                         .when()
                         .post("create")
                         .then()
-                        .statusCode(200)
+                        .statusCode(201)
                         .extract().asString();
 
         responseBodyEmployee = objectMapper.readValue(response, EmployeeResponse.class);

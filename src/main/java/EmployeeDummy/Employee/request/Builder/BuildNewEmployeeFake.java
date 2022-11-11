@@ -10,7 +10,7 @@ public class BuildNewEmployeeFake extends EmployeeRequestBuilder {
         super.employee=new EmployeeRequest();
     }
     public void Buildname() {
-        employee.setName(faker.internet().emailAddress());
+        employee.setName(faker.internet().domainName());
     }
     // public  void Buildname(){
     // employee.setName("madfdf");
