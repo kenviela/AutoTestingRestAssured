@@ -1,6 +1,9 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import data.factory.CreatePostDataFactory;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Description;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -14,6 +17,7 @@ import model.User.Response.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static data.reader.managerData.getData;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -31,13 +35,16 @@ public class GoRest {
     @BeforeEach
     public void setup(){
 
-        RestAssured.baseURI="https://gorest.co.in";
-        RestAssured.basePath="/public/v2";
+        RestAssured.baseURI= getData("base.url");
+        RestAssured.basePath=getData("base.path");
         RestAssured.filters(new RequestLoggingFilter(),new ResponseLoggingFilter());
         RestAssured.requestSpecification = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
 
     }
     @Test
+    @Description("Femenino")
+    @Epic("Create user")
+    @Feature("User female")
     public void createUserFamale() throws JsonProcessingException {
         buildUserRequest.setUserRequestBuilder(userFemale);
         buildUserRequest.buildUserRequest();
@@ -58,6 +65,9 @@ public class GoRest {
 
     }
     @Test
+    @Description("Masculino")
+    @Epic("Create user")
+    @Feature("User male")
     public void createUsermale() throws JsonProcessingException {
         buildUserRequest.setUserRequestBuilder(userMale);
         buildUserRequest.buildUserRequest();
@@ -79,6 +89,9 @@ public class GoRest {
     }
 
     @Test
+    @Description("user fake")
+    @Epic("Create user")
+    @Feature("User fake")
     public void createUsermaleFake() throws JsonProcessingException {
         buildUserRequest.setUserRequestBuilder(userMaleFake);
         buildUserRequest.buildUserRequest();

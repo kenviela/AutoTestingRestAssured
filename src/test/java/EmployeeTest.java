@@ -8,6 +8,9 @@ import EmployeeDummy.post.request.PostRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -17,6 +20,7 @@ import model.Post.Response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static data.reader.managerData.getData;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -33,13 +37,16 @@ public class EmployeeTest {
     @BeforeEach
     public void setup(){
 
-        RestAssured.baseURI="https://dummy.restapiexample.com";
-        RestAssured.basePath="/api/v1/";
+        RestAssured.baseURI= getData("base.url.dummy");
+        RestAssured.basePath=getData("base.path.dummy");
         RestAssured.filters(new RequestLoggingFilter(),new ResponseLoggingFilter());
         RestAssured.requestSpecification = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
 
     }
     @Test
+    @Description("New Employee")
+    @Epic("Create Employee")
+    @Feature("Employee")
     public void createEmployeeNew() throws JsonProcessingException {
         buildEmployee.setEmployeeRequestBuilder(employeenew);
         buildEmployee.buildEmployeeRequest();
@@ -60,6 +67,9 @@ public class EmployeeTest {
     }
 
     @Test
+    @Description("Employee Fake")
+    @Epic("Create EMployee")
+    @Feature("User fake")
     public void createEmployeeFake() throws JsonProcessingException {
         buildEmployee.setEmployeeRequestBuilder(employeeFake);
         buildEmployee.buildEmployeeRequest();
@@ -72,7 +82,7 @@ public class EmployeeTest {
                         .when()
                         .post("create")
                         .then()
-                        .statusCode(201)
+                        .statusCode(200)
                         .extract().asString();
 
         responseBodyEmployee = objectMapper.readValue(response, EmployeeResponse.class);

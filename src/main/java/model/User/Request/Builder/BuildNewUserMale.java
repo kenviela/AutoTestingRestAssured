@@ -9,7 +9,7 @@ public class BuildNewUserMale extends UserRequestBuilder{
     }
 
     public void Buildemail() {
-        user.setEmail("beto@gmail.com");
+        user.setEmail("betoo@gmail.com");
     }
 
     public void Buildgender() {

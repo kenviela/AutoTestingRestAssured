@@ -12,12 +12,10 @@ public class BuildNewEmployeeFake extends EmployeeRequestBuilder {
     public void Buildname() {
         employee.setName(faker.internet().domainName());
     }
-    // public  void Buildname(){
-    // employee.setName("madfdf");
-    //}
+
 
     public void Buildsalary()  {
-        employee.setSalary("20000");
+        employee.setSalary("4000");
     }
 
     public void Buildage() {

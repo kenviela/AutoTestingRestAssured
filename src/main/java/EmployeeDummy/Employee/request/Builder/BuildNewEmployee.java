@@ -9,17 +9,17 @@ public class BuildNewEmployee extends EmployeeRequestBuilder {
 
     @Override
     public void Buildname() {
-        employee.setName("Daniela");
+        employee.setName("luissa");
     }
 
 
     @Override
     public void Buildsalary() {
-        employee.setSalary("0");
+        employee.setSalary("90");
     }
 
     @Override
     public void Buildage() {
-        employee.setAge("17 años");
+        employee.setAge("22");
     }
 }
